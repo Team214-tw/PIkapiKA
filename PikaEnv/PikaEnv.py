@@ -86,22 +86,25 @@ class PikaEnv(gym.Env):
         if bally >= HEIGHT * 0.8:
             dx = ballx - pikax
             dy = bally - pikay
-            # if math.sqrt(dx ** 2 + dy ** 2) < 40:  # rescue ball policy
+            # --- pika try to rescue ball
+            # if math.sqrt(dx ** 2 + dy ** 2) < 40:
             #     reward += 50
             if ballx > WIDTH // 2:  # pika lose
-                reward -= 20
+                reward -= 10
             else:  # pika win
-                reward += 20
+                reward += 10
 
-        # if abs(pikax - WIDTH * 0.75) < 35:  # stand in the middle
+        # --- stand in the middle
+        # if abs(pikax - WIDTH * 0.75) < 35:  
         #     reward += 5
         # elif abs(pikax - WIDTH * 0.5) < 60 or abs(pikax - WIDTH) < 60: # stand front or back
         #     reward -= 5
         # else:
         #     reward -= 3
 
-        if touch(pikax, pikay, ballx, bally, last_ballx, last_bally):  # pika touch ball
-            reward += 10
+        # --- pika touch ball
+        # if touch(pikax, pikay, ballx, bally, last_ballx, last_bally):
+        #     reward += 10
 
         return reward
 

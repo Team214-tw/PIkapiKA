@@ -26,9 +26,18 @@ parser.add_argument('--render',
                     action='store_true',
                     default=False,
                     help='actor id')
+parser.add_argument('--benchmark',
+                    action='store_true',
+                    default=False,
+                    help='benchmark for project used')
+parser.add_argument('--cuda',
+                    action='store_true',
+                    default=False,
+                    help='enable cuda')
 args = parser.parse_args()
 
-args.device = "cpu"
+args.device = "cuda:0" if args.cuda else "cpu"
+
 
 class Actor:
     def __init__(self,
@@ -57,7 +66,8 @@ class Actor:
         self.chkpt_dir = chkpt_dir
         os.makedirs(chkpt_dir, exist_ok=True)
 
-        self.model = DQN(state_size=state_size, action_size=action_size).to(args.device)
+        self.model = DQN(state_size=state_size,
+                         action_size=action_size).to(args.device)
         self.memory = Memory(self.mem_size)
         self.explore_step = 1000
         self.explore_cntr = 0
@@ -66,7 +76,7 @@ class Actor:
         self.load_model()
         scores = []
         avg_scores = []
-        
+
         self.total_time = 0
         self.record_cntr = 0
         self.record = []
@@ -78,10 +88,14 @@ class Actor:
             self.load_model()
             print("\nepisode:", episode, "  score:", score, "  memory length:",
                   self.memory.tree.n_entries, "  epsilon:", self.epsilon)
-            print(self.record)
-            if len(self.record) == 10:
-                break
-        print(np.mean(self.record))
+
+            if args.benchmark:
+                print(self.record)
+                if len(self.record) == 10:
+                    break
+
+        if args.benchmark:
+            print(np.mean(self.record))
 
     def benchmark(self, episode, scores):
         filepath = os.path.join(
@@ -106,17 +120,19 @@ class Actor:
 
             next_state, reward, done, info = env.step(action)
             next_state = np.reshape(next_state, [1, self.state_size])
-            
+
             if env.game.FSM.is_gaming() or done:
                 # print(reward)
                 score += reward
-                self.total_time += time.time() - start_time
-                if self.total_time > 5:
-                    self.record.append(self.record_cntr)
-                    self.record_cntr = 0
-                    self.total_time = 0
-                self.record_cntr += 1
                 self.append_sample(state, action, reward, next_state, done)
+
+                if args.benchmark:
+                    self.total_time += time.time() - start_time
+                    if self.total_time > 5:
+                        self.record.append(self.record_cntr)
+                        self.record_cntr = 0
+                        self.total_time = 0
+                    self.record_cntr += 1
 
             if done:
                 break
@@ -134,14 +150,14 @@ class Actor:
         self.epsilon = max(self.eps_min, self.epsilon * self.eps_dec)
 
     def append_sample(self, state, action, reward, next_state, done):
-        state_tensor = Variable(T.FloatTensor(state)).to(args.device)
+        state_tensor = T.FloatTensor(state).to(args.device)
         V_s, A_s = self.model.forward(state_tensor)
         old_val = A_s.data[0][action]
 
         if done:
             new_val = reward
         else:
-            new_state = Variable(T.FloatTensor(next_state)).to(args.device)
+            new_state = T.FloatTensor(next_state).to(args.device)
             V_s_, A_s_ = self.model.forward(new_state)
             new_val = reward + self.gamma * T.max(A_s_.data)
 
@@ -181,8 +197,6 @@ class Actor:
 
 
 if __name__ == '__main__':
-    # env = gym.make('Pong-ramNoFrameskip-v4')
-    # env = gym.make('CartPole-v1')
     env = PikaEnv()
 
     actor = Actor(env=env,

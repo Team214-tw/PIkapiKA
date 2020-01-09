@@ -28,11 +28,10 @@ def get_rightPika_position(img):
 def pika_client(conn):
     monitor = {"top": 0, "left": 0, "width": WIDTH, "height": HEIGHT}
 
-    def press_and_release(keyboard, keys, holdtime=0.5):
+    def press_and_release(keyboard, keys, holdtime=0.01):
         for key in keys:
             keyboard.press(key)
-        if Key.alt in keys or 'g' in keys or 'p' in keys:
-            time.sleep(holdtime)
+        time.sleep(holdtime)
         for key in keys:
             keyboard.release(key)
 

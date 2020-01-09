@@ -18,9 +18,13 @@ parser.add_argument('--actor-num',
                     type=int,
                     default=0,
                     help='number of actors')
+parser.add_argument('--cuda',
+                    action='store_true',
+                    default=False,
+                    help='enable cuda')
 args = parser.parse_args()
 
-args.device = 'cpu'
+args.device = "cuda:0" if args.cuda else "cpu"
 
 
 class Learner:
