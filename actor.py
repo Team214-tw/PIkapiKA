@@ -100,7 +100,7 @@ class Actor:
     def benchmark(self, episode, scores):
         filepath = os.path.join(
             self.chkpt_dir, f'benchmark{self.actor_id}.png')
-        plt.ylim(top=500)
+        # plt.ylim(top=500)
         plt.plot(scores, color='blue')
         plt.savefig(filepath)
 
