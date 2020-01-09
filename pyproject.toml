@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "PIkapiKA"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = "~3.7"
+numpy = "^1.17"
+opencv-python = "^4.1"
+gym = "^0.15.4"
+mss = "^4.0"
+tensorflow = "1.14"
+keras-rl = "^0.4.2"
+torch = "^1.3"
+pynput = "^1.6"
+Xlib = "^0.21.0"
+transitions = "^0.7.1"
+xvfbwrapper = "^0.2.9"
+matplotlib = "^3.1"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^18.3-alpha.0", allows-prereleases = true}
+pylint = "^2.4"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
