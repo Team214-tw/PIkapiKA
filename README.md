@@ -1,5 +1,7 @@
 # PIkapiKA
 
+![](https://i.imgur.com/nKivGgq.gif)
+
 ## Usage
 
 ### Install dependency (Arch Linux)
