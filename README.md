@@ -1,6 +1,5 @@
 # PIkapiKA
-
-![](https://i.imgur.com/nKivGgq.gif)
+[Demo](https://i.imgur.com/nKivGgq.mp4)
 
 ## Usage
 
