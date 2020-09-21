@@ -1,5 +1,7 @@
 # PIkapiKA
-[Demo](https://i.imgur.com/nKivGgq.mp4)
+![Demo](https://i.imgur.com/JTyfTiX.gif)  
+[Mp4 Version](https://i.imgur.com/nKivGgq.mp4)  
+(Agent on the right, Built-in computer player on the left)
 
 ## Usage
 
